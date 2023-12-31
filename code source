@@ -1,0 +1,40 @@
+from datetime import datetime
+def calculer_solde(initial_balance, transactions, taux_interet):
+    solde = initial_balance
+    solde_mois = []
+
+    for transaction in transactions:
+        date_str, montant = transaction
+        date = datetime.strptime(date_str, "%d-%m-%y")
+
+        # Calculer l'intérêt pour le mois précédent
+        solde *= (1 + taux_interet)
+        
+        # Ajouter la transaction au solde
+        solde += montant
+
+        # Ajouter le solde du mois à la liste
+        solde_mois.append((date_str, solde))
+
+    return solde_mois
+
+# Saisie des données au clavier
+initial_balance = float(input("Entrez le solde initial du compte d'épargne : "))
+transactions = []
+while True:
+    date_str = input("Entrez la date (jj-mm-aa) ou tapez 'fin' pour terminer : ")
+    if date_str.lower() == 'fin':
+        break
+    montant = float(input("Entrez le montant de la transaction : "))
+    transactions.append((date_str, montant))
+
+taux_interet = float(input("Entrez le taux d'intérêt mensuel (en décimal) : "))
+
+# Calculer les soldes avec les intérêts
+resultat = calculer_solde(initial_balance, transactions, taux_interet)
+
+# Afficher le tableau des soldes
+print("\nDate\t\tSolde")
+print("--------------------")
+for date, solde in resultat:
+    print(f"{date}\t{solde}")
